@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffd6ec">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<title>Birdie Survival Kit 🐦</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom, #fceaff, #e0f7ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .app {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 360px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .bird pre {
+        margin: 0;
+        font-family: monospace;
+        color: #444;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    button {
+        padding: 12px;
+        border: none;
+        border-radius: 15px;
+        font-size: 15px;
+        cursor: pointer;
+        background-color: #ffd6ec;
+        transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background-color: #ffc2e0;
+    }
+
+    button:active {
+        transform: scale(0.95);
+    }
+
+    .exit {
+        background-color: #d3f8d3;
+    }
+
+    .exit:hover {
+        background-color: #bff0bf;
+    }
+
+    .response {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        background: #f4f4f4;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: 0.2s;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h1>🐦 Birdie Survival Kit</h1>
+
+    <div class="bird">
+<pre>
+  \
+ (o>
+ //\
+ V_/_
+</pre>
+    </div>
+
+    <p>How is this birdie feeling?</p>
+
+    <div id="buttons" class="buttons"></div>
+
+    <div id="response" class="response">
+        What is your need, birdie birdie? 💛
+    </div>
+</div>
+
+<script>
+/* === Data (Python dict → JS object) === */
+const birdieData = {
+    "I'm hungry": "Eat this little thing 🍎",
+    "I'm thirsty": "Drink water 💧",
+    "I'm bored": "Play a game 🎮",
+    "I wanna bite you": "Option denied 😤"
+};
+
+const responseBox = document.getElementById("response");
+const buttonsContainer = document.getElementById("buttons");
+
+/* === Create menu dynamically === */
+function createMenu() {
+    const needs = Object.keys(birdieData);
+
+    needs.forEach((need, index) => {
+        const btn = document.createElement("button");
+
+        btn.textContent = `[${index + 1}] ${need}`;
+        btn.addEventListener("click", () => handleChoice(index + 1));
+
+        buttonsContainer.appendChild(btn);
+    });
+
+    // Exit button
+    const exitBtn = document.createElement("button");
+    exitBtn.textContent = `[${needs.length + 1}] Exit`;
+    exitBtn.classList.add("exit");
+
+    exitBtn.addEventListener("click", exitApp);
+
+    buttonsContainer.appendChild(exitBtn);
+}
+
+/* === Handle selection === */
+function handleChoice(choice) {
+    const needsList = Object.keys(birdieData);
+
+    responseBox.classList.remove("error");
+
+    if (choice >= 1 && choice <= needsList.length) {
+        const selectedNeed = needsList[choice - 1];
+        responseBox.textContent = birdieData[selectedNeed] + " 🐤";
+    }
+    else if (choice === needsList.length + 1) {
+        exitApp();
+    }
+    else {
+        responseBox.textContent = "Invalid option ❌";
+        responseBox.classList.add("error");
+    }
+}
+
+/* === Exit === */
+function exitApp() {
+    responseBox.classList.remove("error");
+    responseBox.textContent = "Goodbye 💕 Come back anytime!";
+}
+
+/* === Init === */
+createMenu();
+</script>
+
+</body>
+</html>
